@@ -124,11 +124,10 @@ converting them to binary masks, see :ref:`bitmask_details`.
 
 A simple example on how to set flags can be:
 
-    >>> rng = np.random.default_rng()
-    >>> data = rng.normal(size=(10, 10), loc=1.0, scale=0.1)
+    >>> data = np.zeros((10, 10))
     >>> ccd = CCDData(data, unit="electron")
 
-    >>> flags = rng.random(size=(10, 10))  # Create a simple flags array
+    >>> flags = np.ones((10, 10))  # Create a simple flags array
     >>> ccd = CCDData(data, unit='adu', flags=flags)
 
 Flags can be also set using `~astropy.nddata.FlagCollection`, which provides a
@@ -141,8 +140,8 @@ convenient interface for managing multiple flags.
     >>> flags = FlagCollection(shape=(100, 100))
 
     >>> # Add different types of flags
-    >>> flags['COSMIC_RAY'] = rng.integers(0, 2, (100, 100), dtype=bool)
-    >>> flags['SATURATED'] = rng.integers(0, 2, (100, 100), dtype=int)
+    >>> flags['COSMIC_RAY'] = np.zeros((100, 100), dtype=float)
+    >>> flags['SATURATED'] = np.zeros((100, 100), dtype=int)
     >>> flags['BAD_PIXEL'] = np.zeros((100, 100), dtype=bool)
     >>> flags['BAD_PIXEL'][50:60, 50:60] = True  # Mark a region as bad
 
@@ -153,8 +152,6 @@ when creating the `~astropy.nddata.CCDData` object using the ``hdu_flags``. In
 case that multiple flags are set using `~astropy.nddata.FlagCollection`, they will be stored in a multiple HDUs using the flag collection names, but user
 must still provide a non-empty string to ``hdu_flags`` to indicate that flags should be saved.
 
-    >>> ccd.write('example_flag_collection.fits', hdu_flags='FLAGS')
-    >>> ccd_r = CCDData.read('example_flag_collection.fits', hdu_flags='FLAGS')
 
 WCS
 +++
